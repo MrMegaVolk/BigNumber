@@ -4,8 +4,8 @@
 
 using namespace std;
 
-#define i_f 12395
-#define i_s 2147483647
+#define i_f        12'395
+#define i_s 2'147'483'647
 
 #define divstr   "0.000005771871"
 #define mdivstr "-0.000005771871"
@@ -213,40 +213,181 @@ void BIVectorDecimal() {
 }
 #pragma endregion
 
-BigNumer& factorial(int fact) {
+#pragma region SpeedTest
+
+#define SUMCOUNT 100'000
+#define SUBCOUNT 100'000
+#define MULCOUNT 1500
+#define DIVCOUNT 15
+typedef unsigned int ui;
+
+void SPSUM() {
+	BigNumer a(1);
+	BigNumer b(1);
+
+	ui start_time = clock();
+	for (int i = 0; i < SUMCOUNT; i++) {
+		a += b;
+		b++;
+	}
+	ui end_time = clock();
+	ui time = end_time - start_time;
+	cout << endl << endl << "Sum work time: " << time << "ms" << endl;
+
+	BI ba(1);
+	BI bb(1);
+
+	start_time = clock();
+	for (int i = 0; i < SUMCOUNT; i++) {
+		ba = ba.Add(ba, bb);
+		bb++;
+	}
+	end_time = clock();
+	ui btime = end_time - start_time;
+	cout << "Sum BI work time: " << btime << "ms" << endl;
+
+	if (a == ba)
+		cout << "Sum success" << endl;
+	else
+		cout << "Sum failed" << endl;
+
+	if (time == 0)
+		time = 1;
+	if (btime == 0)
+		btime = 1;
+	if (time > btime)
+		cout << "amount is slower " << time / btime << " times" << endl;
+	else if (time < btime)
+		cout << "amount " << btime / time << " times faster" << endl;
+	else
+		cout << "algorithms have the same speed" << endl;
+}
+void SPSUB() {
+	BigNumer a(1);
+	BigNumer b(1);
+
+	ui start_time = clock();
+	for (int i = 0; i < SUMCOUNT; i++) {
+		a -= b;
+		b++;
+	}
+	ui end_time = clock();
+	ui time = end_time - start_time;
+	cout << endl << endl << "Sub work time: " << time << "ms" << endl;
+
+	BI ba(1);
+	BI bb(1);
+
+	start_time = clock();
+	for (int i = 0; i < SUMCOUNT; i++) {
+		ba = ba.Subtract(ba, bb);
+		bb++;
+	}
+	end_time = clock();
+	ui btime = end_time - start_time;
+	cout << "Sub BI work time: " << btime << "ms" << endl;
+
+	if (a == ba)
+		cout << "Sub success" << endl;
+	else
+		cout << "Sub failed" << endl;
+
+	if (time == 0)
+		time = 1;
+	if (btime == 0)
+		btime = 1;
+	if (time > btime)
+		cout << "amount is slower " << time / btime << " times" << endl;
+	else if (time < btime)
+		cout << "amount " << btime / time << " times faster" << endl;
+	else
+		cout << "algorithms have the same speed" << endl;
+}
+void SPMUL() {
 	BigNumer a(1);
 	BigNumer b(2);
 
-	unsigned int start_time = clock();
+	ui start_time = clock();
 	int num = 1;
-	for (int i = 0; i < (fact - 1); i++) {
+	for (int i = 0; i < MULCOUNT; i++) {
 		a *= b;
 		b++;
 		num++;
 	}
-	unsigned int end_time = clock();
-	cout << endl << endl << "Work time: " << end_time - start_time << "ms" << endl;
-	start_time = clock();
-	cout << endl << "factorial " << num << " = " << a.c_str() << endl;
-	end_time = clock();
-	cout << endl << "Print time: " << end_time - start_time << "ms" << endl;
-	return a;
-}
-BI& factorialBI(int fact) {
-	BI a(1);
-	BI b(2);
+	ui end_time = clock();
+	ui time = end_time - start_time;
+	cout << endl << endl << "MUL work time: " << time << "ms" << endl;
 
-	unsigned int start_time = clock();
+	BI ba(1);
+	BI bb(2);
+
+	start_time = clock();
+	for (int i = 0; i < MULCOUNT; i++) {
+		ba *= bb;
+		bb++;
+	}
+	end_time = clock();
+	ui btime = end_time - start_time;
+	cout << "MUL BI work time: " << btime << "ms" << endl;
+
+	if (a == ba)
+		cout << "MUL success" << endl;
+	else
+		cout << "MUL failed" << endl;
+
+	if (time == 0)
+		time = 1;
+	if (btime == 0)
+		btime = 1;
+	if (time > btime)
+		cout << "amount is slower " << time / btime << " times" << endl;
+	else if (time < btime)
+		cout << "amount " << btime / time << " times faster" << endl;
+	else
+		cout << "algorithms have the same speed" << endl;
+}
+void SPDIV() {
+	BigNumer a(i_s);
+	BigNumer b(2);
+
+	ui start_time = clock();
 	int num = 1;
-	for (int i = 0; i < (fact - 1); i++) {
-		a *= b;
-		b++;
+	for (int i = 0; i < DIVCOUNT; i++) {
+		a /= b;
 		num++;
 	}
-	unsigned int end_time = clock();
-	cout << endl << endl << "BI Work time: " << end_time - start_time << "ms" << endl;
-	return a;
+	ui end_time = clock();
+	ui time = end_time - start_time;
+	cout << endl << endl << "Div work time: " << time << "ms" << endl;
+
+	BI ba(i_s);
+	BI bb(2);
+
+	start_time = clock();
+	for (int i = 0; i < DIVCOUNT; i++) {
+		ba /= bb;
+	}
+	end_time = clock();
+	ui btime = end_time - start_time;
+	cout << "Div BI work time: " << btime << "ms" << endl;
+
+	if (a == ba) // BI do not have a decimals, so if BigNumber have decimals, compare be failed
+		cout << "Div success" << endl;
+	else
+		cout << "Div failed" << endl;
+
+	if (time == 0)
+		time = 1;
+	if (btime == 0)
+		btime = 1;
+	if (time > btime)
+		cout << "amount is slower " << time / btime << " times" << endl;
+	else if (time < btime)
+		cout << "amount " << btime / time << " times faster" << endl;
+	else
+		cout << "algorithms have the same speed" << endl;
 }
+#pragma endregion
 
 int main() {
 	//BigNumber the integer part of vector
@@ -254,16 +395,12 @@ int main() {
 	//BigNumber the decimal part of vector
 	BIVectorDecimal();
 
-	BigNumer a = factorial(3000);
-	BI b = factorialBI(3000);
-	if (a == b)
-		cout << "factorial success";
-	else {
-		// fuuuuuuuuuuuuu
-		cout << "factorial failed";
-	}
-	cout << endl;
+	// speed tests
+	SPSUM();
+	SPSUB();
+	SPMUL();
+	SPDIV();
 
-	cout << "Press any key to exit" << _getch();
+	cout << endl << "Press any key to exit" << _getch();
 	return 0;
 }

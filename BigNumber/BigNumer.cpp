@@ -5,7 +5,7 @@ BigNumer::BigNumer() {
 	a.clear();
 	d.clear();
 
-	percision = 11;
+	percision = 12;
 }
 BigNumer::BigNumer(int val) {
 	a.clear();
@@ -19,7 +19,7 @@ BigNumer::BigNumer(int val) {
 	if (d != 0)
 		a.push_back(d);
 
-	percision = 11;
+	percision = 12;
 }
 BigNumer::BigNumer(const BigNumer& val) {
 	operator=(val);
